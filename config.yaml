@@ -1,0 +1,12 @@
+company:
+  name: "ABC Tekstil"
+  full_name: "ABC Tekstil Üretim ve Takip Sistemleri"
+  logo_path: "assets/logo.png"
+
+database:
+  db_name: "tekstil_yonetim.db"
+
+app_settings:
+  port: 8501
+  theme: "dark"
+  language: "tr"

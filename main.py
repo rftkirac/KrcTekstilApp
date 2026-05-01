@@ -4,7 +4,7 @@ from ui_auth import show_login_page
 from ui_customers import show_customer_page
 from ui_departments import show_department_page
 from ui_models import show_model_page
-from ui_model_360 import show_model_360_view
+from ui_reportsFin import show_daily_financial_report
 from ui_model_details import show_model_details_page
 from ui_production import show_production_page
 from ui_reports import show_advanced_report_page
@@ -103,12 +103,14 @@ else:
 
 
         nav_button("Modeller", "👕")
-        nav_button("Model Günlük İş Giriş", "🚀")
         nav_button("Model Detay", "🧵")
+        nav_button("Model Günlük İş Giriş", "🚀")
+
         nav_button("Model Kapama", "🏁")
         nav_button("Aksesuarlar", "🎀")
 
         nav_button("Raporlar", "📊")
+        nav_button("Gelir Raporu", "📊")
         nav_button("Firmalar", "👥")
 
         # Admin Paneli Ayırıcı
@@ -167,5 +169,7 @@ else:
             show_advanced_report_page()
         elif page == "Parametreler":
             show_parameter_page()
+        elif page == "Gelir Raporu":
+            show_daily_financial_report()
         elif page == "Kullanıcılar":
             show_user_page(True)

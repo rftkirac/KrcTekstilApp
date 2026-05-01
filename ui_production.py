@@ -19,19 +19,28 @@ def show_production_page(current_user):
             st.error("Önce Firma tanımlamalısınız!")
             return
 
+        df_depart = run_query("SELECT id,name FROM Departmans order by name")
+
+        d_id = col_f1.selectbox("Departman Seçin", df_depart['id'],
+                                      format_func=lambda
+                                          x: f"{df_depart[df_depart['id'] == x]['name'].values[0]}")
+
         sel_cust_name = col_f1.selectbox("Firma Seçin", df_customers['name'])
         sel_cust_id = int(df_customers[df_customers['name'] == sel_cust_name]['id'].values[0])
 
         # Seçili firmaya ait modelleri çek
         df_models = run_query("SELECT id, code, name, siparisAdet FROM Model WHERE companyId = ?", (sel_cust_id,))
 
+
         if df_models.empty:
             st.warning("Bu firmaya ait tanımlı model bulunamadı.")
             return
 
-        sel_model_id = col_f2.selectbox("Model Seçin", df_models['id'],
+        sel_model_id = col_f1.selectbox("Model Seçin", df_models['id'],
                                         format_func=lambda
                                             x: f"{df_models[df_models['id'] == x]['code'].values[0]} - {df_models[df_models['id'] == x]['name'].values[0]}")
+
+
 
         # Seçili modelin detaylarını tek satırda göster
         m_info = df_models[df_models['id'] == sel_model_id].iloc[0]
@@ -50,7 +59,7 @@ def show_production_page(current_user):
         m_c4.metric("Kalan", f"{kalan:,}", delta_color="inverse")
 
     # --- 2. VERİ GİRİŞİ ---
-    st.subheader("📥 Yeni Üretim Girişi")
+    st.subheader("📥 Günlük Üretim Girişi")
     depts = run_query("SELECT id, name FROM Departmans")
 
     with st.form("daily_prod_form", clear_on_submit=True):
@@ -58,13 +67,10 @@ def show_production_page(current_user):
             st.error("Lütfen önce Departman tanımlamalarını yapın!")
             st.form_submit_button("Kaydet", disabled=True)
         else:
-            col1, col2, col3 = st.columns([2, 1, 1])
+            col1, col2,  = st.columns([1, 1])
             with col1:
-                d_id = st.selectbox("Departman / İstasyon", depts['id'],
-                                    format_func=lambda x: depts[depts['id'] == x]['name'].values[0])
-            with col2:
                 qty = st.number_input("Üretilen Adet", min_value=1, step=1)
-            with col3:
+            with col2:
                 p_date = st.date_input("İşlem Tarihi", value=today)
 
             if st.form_submit_button("✅ Üretim Kaydını İşle", use_container_width=True):
@@ -75,7 +81,7 @@ def show_production_page(current_user):
                 st.rerun()
 
     # --- 3. LİSTELEME VE DÜZENLEME ---
-    st.subheader(f"📝 {m_info['code']} Modeline Ait Kayıtlar")
+    st.subheader(f"📝 ({m_info['code']} - {m_info['name']}) Modeline Ait Kayıtlar")
 
     # Sadece seçili modele ait raporu çek
     raw_report = run_query("""
@@ -87,9 +93,9 @@ def show_production_page(current_user):
             p.createUser as [Giren]
         FROM Production p
         JOIN Departmans d ON p.departmentId = d.id
-        WHERE p.modelId = ?
+        WHERE p.modelId = ? and p.departmentId = ?
         ORDER BY p.date DESC, p.id DESC
-    """, (int(sel_model_id),))
+    """, (int(sel_model_id),int(d_id),))
 
     gosterilecek_kolonlar = ["ModelAdi", "Tarih", "Departman", "Adet", "Giren"]
 

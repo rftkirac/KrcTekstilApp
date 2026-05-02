@@ -1,7 +1,7 @@
 import streamlit as st
 from database import run_query, execute_db
 from datetime import datetime
-
+import time
 
 def show_model_closing_page(current_user):
     st.header("🏁 Model Kapama ve Yükleme İşlemleri")
@@ -55,7 +55,11 @@ def show_model_closing_page(current_user):
 
             if not df_res.empty:
                 st.divider()
-                st.dataframe(df_res, use_container_width=True, hide_index=True)
+                st.dataframe(df_res, use_container_width=True, hide_index=True,
+                             column_config={
+                                 "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                             },
+                             )
             else:
                 st.info("Kayıt bulunamadı.")
 
@@ -104,9 +108,15 @@ def show_model_closing_page(current_user):
                                       renk=?, beden=?, adet=?, ikinciKaliteAdet=?, updateUser=?, updateTime=? WHERE id=?""",
                                    (sel_cust_id, model_map[u_model], str(u_k_date), str(u_y_date), u_renk, u_beden,
                                     u_adet, u_2_adet, current_user, now, int(sel_id)))
+                        st.balloons();
+                        st.toast(f"İşlem başarıyla güncellendi!", icon="🚀")
+                        time.sleep(1);
                         st.rerun()
                     if c2.form_submit_button("🗑️ Kaydı Sil"):
                         execute_db("DELETE FROM modele_kapama WHERE id=?", (int(sel_id),))
+                        st.balloons();
+                        st.toast(f"İşlem başarıyla siliindi!", icon="🚀")
+                        time.sleep(1);
                         st.rerun()
 
             else:  # Yeni Kayıt
@@ -132,6 +142,9 @@ def show_model_closing_page(current_user):
                         execute_db("UPDATE Model SET aktif = 0, updateTime = ? WHERE id = ?",
                                        (now, int(model_map[sel_m])))
                         st.success("Kayıt tamamlandı.")
+                        st.balloons();
+                        st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                        time.sleep(1);
                         st.rerun()
                     else:
                         st.error("Lütfen bir model seçin!")

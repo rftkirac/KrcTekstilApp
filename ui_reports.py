@@ -111,7 +111,11 @@ def show_advanced_report_page():
 
             # 2. Veri Tablosu
             st.subheader("📋 Sonuç Listesi")
-            st.dataframe(df_result, use_container_width=True, hide_index=True)
+            st.dataframe(df_result, use_container_width=True, hide_index=True,
+                         column_config={
+                             "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                         },
+                         )
 
             st.divider()
 

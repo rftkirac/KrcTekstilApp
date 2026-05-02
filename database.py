@@ -32,7 +32,6 @@ def init_db():
         c.execute('''CREATE TABLE IF NOT EXISTS Departmans
                      (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                      name TEXT, 
-                     name TEXT, 
                      createTime TEXT, 
                      createUser TEXT)''')
 
@@ -165,7 +164,12 @@ def init_db():
 
         # --- BAŞLANGIÇ VERİLERİ (SEED) ---
 
-
+        # Model tablosuna description (açıklama) sütununu ekler
+        try:
+            execute_db("ALTER TABLE Model ADD COLUMN description TEXT;")
+            print("Açıklama alanı başarıyla eklendi.")
+        except Exception as e:
+            print(f"Not: Alan muhtemelen zaten var veya hata oluştu: {e}")
 
         # Varsayılan Admin
         # Önce kullanıcıyı ara
@@ -227,6 +231,10 @@ def init_db():
             c.execute("INSERT OR IGNORE INTO Roles (roleName) VALUES ('Kesimhane')")
             c.execute("INSERT OR IGNORE INTO Roles (roleName) VALUES ('Dikimhane')")
             c.execute("INSERT OR IGNORE INTO Roles (roleName) VALUES ('UtuPaket')")
+
+            c.execute("INSERT OR IGNORE INTO Departmans (name) VALUES ('Kesimhane')")
+            c.execute("INSERT OR IGNORE INTO Departmans (name) VALUES ('Dikimhane')")
+            c.execute("INSERT OR IGNORE INTO Departmans (name) VALUES ('UtuPaket')")
 
         conn.commit()
 

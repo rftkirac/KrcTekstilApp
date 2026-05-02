@@ -71,7 +71,12 @@ def show_model_details_page(current_user):
             if not df_display.empty:
                 st.divider()
                 st.metric("Toplam Planlanan Adet", f"{df_display['Adet'].sum():,} Adet")
-                st.dataframe(df_display, use_container_width=True, hide_index=True)
+                st.dataframe(df_display,
+                             use_container_width=True,
+                             column_config={
+                                 "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                             },
+                             hide_index=True)
             else:
                 st.warning("Aranan kriterlere uygun kayıt bulunamadı.")
 

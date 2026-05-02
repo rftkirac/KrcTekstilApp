@@ -39,6 +39,20 @@ st.set_page_config(
 st.markdown("""
     <style>
         /* Ana içerik üst boşluğunu daralt */
+        .stDeployButton {
+            display: none;
+        }
+        /* Deploy butonunu hedefle */
+        .stDeployButton {
+            display: none !important;
+        }
+        /* Alternatif olarak üst barın sağındaki tüm butonları gizle */
+        header[data-testid="stHeader"] {
+            background: rgba(0,0,0,0);
+        }
+        div[data-testid="stToolbar"] {
+            visibility: hidden;
+        }
         .block-container {
             padding-top: 3rem;
             padding-bottom: 0rem;

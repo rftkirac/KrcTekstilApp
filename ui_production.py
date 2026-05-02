@@ -1,7 +1,7 @@
 import streamlit as st
 from database import run_query, execute_db
 from datetime import datetime
-
+import time
 
 def show_production_page(current_user):
     st.header("🚀 Günlük Üretim Takibi")
@@ -78,6 +78,9 @@ def show_production_page(current_user):
                               VALUES (?,?,?,?,?,?)""",
                            (int(sel_model_id), int(d_id), str(p_date), qty, now_ts, current_user))
                 st.success(f"Kayıt Eklendi: {qty} adet")
+                st.balloons();
+                st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                time.sleep(1);
                 st.rerun()
 
     # --- 3. LİSTELEME VE DÜZENLEME ---
@@ -100,7 +103,11 @@ def show_production_page(current_user):
     gosterilecek_kolonlar = ["ModelAdi", "Tarih", "Departman", "Adet", "Giren"]
 
     if not raw_report.empty:
-        st.dataframe(raw_report, use_container_width=True, hide_index=True)
+        st.dataframe(raw_report, use_container_width=True, hide_index=True,
+                     column_config={
+                         "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                     },
+                     )
         #st.dataframe(raw_report[gosterilecek_kolonlar], use_container_width=True, hide_index=True)
 
         st.divider()
@@ -116,12 +123,18 @@ def show_production_page(current_user):
                 if st.button("🔢 Adedi Güncelle", use_container_width=True):
                     execute_db("UPDATE Production SET quantity=? WHERE id=?", (new_qty, int(sel_edit_id)))
                     st.toast(f"ID {sel_edit_id} güncellendi.")
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
 
             with e_c2:
                 if st.button("🗑️ Kaydı Tamamen Sil", use_container_width=True, type="secondary"):
                     execute_db("DELETE FROM Production WHERE id=?", (int(sel_edit_id),))
                     st.warning("Kayıt veritabanından silindi.")
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla silindi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
     else:
         st.info("Bu model için henüz bir üretim girişi yapılmamış.")

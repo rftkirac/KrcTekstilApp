@@ -1,6 +1,6 @@
 import streamlit as st
 from database import run_query, execute_db
-
+import time
 
 def show_parameter_page():
     st.header("⚙️ Sistem Parametreleri")
@@ -25,9 +25,15 @@ def show_parameter_page():
                 if c1.form_submit_button("Güncelle"):
                     execute_db("UPDATE parameter SET groupCode=?, code=?, value=? WHERE id=?",
                                (g_code, p_code, p_val, int(sel_id)))
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla güncellendi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
                 if c2.form_submit_button("Sil"):
                     execute_db("DELETE FROM parameter WHERE id=?", (int(sel_id),))
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla silindi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
             else:
                 g_code = st.text_input("Grup Kodu (Örn: AKS_TYPE)")
@@ -37,7 +43,14 @@ def show_parameter_page():
                 if st.form_submit_button("Kaydet"):
                     execute_db("INSERT INTO parameter (groupCode, code, value) VALUES (?,?,?)",
                                (g_code, p_code, p_val))
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
 
     with tab1:
-        st.dataframe(df_params, use_container_width=True)
+        st.dataframe(df_params, use_container_width=True,
+                     column_config={
+                         "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                     },
+                     )

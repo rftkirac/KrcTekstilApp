@@ -1,10 +1,10 @@
 company:
-  name: "ABC Tekstil"
-  full_name: "ABC Tekstil Üretim ve Takip Sistemleri"
+  name: "KRC Tekstil"
+  full_name: "KRC Tekstil Üretim ve Takip Sistemleri"
   logo_path: "assets/logo.png"
 
 database:
-  db_name: "tekstil_yonetim.db"
+  db_name: "krcApp_db.db"
 
 app_settings:
   port: 8501

@@ -39,7 +39,11 @@ def show_model_360_view():
         st.subheader("Günlük Girilen Detaylar (ModelDetay)")
         df_detay = run_query("SELECT renk, beden, adet, createTime FROM ModelDetay WHERE modelId = ?", (model_id,))
         if not df_detay.empty:
-            st.dataframe(df_detay, use_container_width=True)
+            st.dataframe(df_detay, use_container_width=True,
+                         column_config={
+                             "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                         },
+                         )
             st.info(f"Toplam Üretilen: {df_detay['adet'].sum()} / Kalan: {m['siparisAdet'] - df_detay['adet'].sum()}")
         else:
             st.warning("Henüz üretim detayı girilmemiş.")

@@ -75,7 +75,11 @@ def show_daily_financial_report():
             "Toplam Kazanç": "sum"
         }).reset_index()
 
-        st.dataframe(df_summary, use_container_width=True, hide_index=True)
+        st.dataframe(df_summary, use_container_width=True, hide_index=True,
+                     column_config={
+                         "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                     },
+                     )
 
         # 2. Tüm Detaylı Liste
         st.subheader("📄 Detaylı İşlem Kayıtları")
@@ -89,7 +93,10 @@ def show_daily_financial_report():
         st.dataframe(
             display_df.style.highlight_max(axis=0, subset=["Toplam Kazanç"], color='#e6fffa'),
             use_container_width=True,
-            hide_index=True
+            hide_index=True,
+            column_config={
+                "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+            },
         )
 
         # İndirme Butonu

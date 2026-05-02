@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from database import run_query, execute_db
 from datetime import datetime
-
+import time
 
 def show_accessory_page(current_user):
     st.header("🎀 Model Aksesuar Yönetimi")
@@ -75,6 +75,7 @@ def show_accessory_page(current_user):
                 use_container_width=True,
                 hide_index=True,
                 column_config={
+                    "ID": None,  # 👈 Bu satır ID kolonunu tamamen gizler
                     "Birim Fiyat": st.column_config.NumberColumn(
                         "Birim Fiyat",
                         format="%.2f",  # 2 ondalık basamak
@@ -138,9 +139,15 @@ def show_accessory_page(current_user):
                                   dövizKodu=?, updateUser=?, updateTime=? WHERE id=?""",
                                (int(m_id), acc_name, acc_type, qty, unit, price, currency, current_user, now,
                                 int(sel_acc_id)))
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla güncellendi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
                 if c2.form_submit_button("Aksesuarı Sil"):
                     execute_db("DELETE FROM aksesuar WHERE id=?", (int(sel_acc_id),))
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla silindi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
             else:
                 m_id = st.selectbox("Model", models['id'],
@@ -156,4 +163,8 @@ def show_accessory_page(current_user):
                     execute_db("""INSERT INTO aksesuar (modelId, name, type, adet, birim, birimFiyat, dövizKodu, creataUser, CreateTime) 
                                   VALUES (?,?,?,?,?,?,?,?,?)""",
                                (int(m_id), acc_name, acc_type, qty, unit, price, currency, current_user, now))
+
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()

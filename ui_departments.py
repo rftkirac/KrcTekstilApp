@@ -1,7 +1,7 @@
 import streamlit as st
 from database import run_query, execute_db
 from datetime import datetime
-
+import time
 
 def show_department_page(current_user):
     st.header("🏭 Departman Yönetimi")
@@ -27,6 +27,9 @@ def show_department_page(current_user):
                     execute_db("""UPDATE Departmans SET name=?, updateTime=?, updateUser=? 
                                   WHERE id=?""", (new_name, now, current_user, int(row['id'])))
                     st.success("Departman güncellendi!")
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla güncellendi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
 
                 if c2.form_submit_button("🗑️ Sil"):
@@ -34,6 +37,9 @@ def show_department_page(current_user):
                                (int(row['id']),))  # Önce bağlı üretimleri temizle
                     execute_db("DELETE FROM Departmans WHERE id=?", (int(row['id']),))
                     st.warning("Departman silindi!")
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla silindi!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
             else:
                 # YENİ KAYIT
@@ -42,7 +48,14 @@ def show_department_page(current_user):
                     execute_db("""INSERT INTO Departmans (name, createTime, createUser) 
                                   VALUES (?,?,?)""", (new_name, now, current_user))
                     st.success("Departman başarıyla eklendi.")
+                    st.balloons();
+                    st.toast(f"İşlem başarıyla oluşturuldu!", icon="🚀")
+                    time.sleep(1);
                     st.rerun()
 
     with tab1:
-        st.dataframe(df_depts, use_container_width=True)
+        st.dataframe(df_depts, use_container_width=True,
+                     column_config={
+                         "id": None,  # 👈 Bu satır ID kolonunu tamamen gizler
+                     },
+                     )

@@ -4,7 +4,7 @@ company:
   logo_path: "assets/logo.png"
 
 database:
-  db_name: "krcApp_db.db"
+  db_name: "tekstil_yonetim.db"
 
 app_settings:
   port: 8501
